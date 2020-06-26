@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<header>
+    <title>Etch a Sketch</title>
+
+    <style>    
+        body {
+            background-color:lightsteelblue;
+        }
+
+        .title {
+            color: whitesmoke;
+            margin: 0;
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        .container {
+            margin: 0;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border: lightslategrey 20px solid;
+            border-radius: 5px;
+        }
+        
+        .box {
+            background: whitesmoke;
+            width: 40px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .selections{
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 45%;
+        }
+
+        button {
+            color: whitesmoke;
+            font-weight: bold;
+            background: lightslategrey;
+            border: lightslategrey;
+            border-radius: 5px;
+            width: 20%;
+            height: 40px;
+        }
+
+        button:hover {background-color: lightslategrey}
+
+        button:active {
+            background-color: slategray;
+            box-shadow: 0 5px gray;
+            transform: translateY(4px);
+        }
+
+    </style>
+
+</header>
+
+<body>
+    <h2 class="title">Etch-a-Sketch</h2>
+    <div>
+        <div class = "container" id="container"></div>
+    </div>
+
+    <div class="selections">
+        <button id = "reset">Reset</button>
+        <button id = "random">Random</button>
+    </div>
+</body>
+
+<script>
+    //lw stands for length and width
+    function makeGrid(lw) {
+        var x = 0;
+        for (var i = 0; i < lw; i++) {
+            var row = document.createElement("div");
+            row.className = "row";
+
+            for(var j = 0; j < lw; j++) {
+                box = document.createElement("div");
+                box.className = "box";
+                id = "box" + x;
+                x++;
+                box.id = id;
+
+                row.appendChild(box);
+            }
+            document.getElementById("container").appendChild(row);
+        }
+    }
+
+    function reset () {
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        var newDimensions = prompt("Enter new dimensions for grid:");
+        makeGrid(newDimensions);
+
+        x = newDimensions * newDimensions;
+        addListenersToBoxes(x);
+    }
+
+    function changeColor() {
+        if (isRandom) {
+            color = getRandomColor();
+            this.style.background = color;
+        } else {
+            this.style.background = "black";
+        }
+    }
+
+    function addListenersToBoxes(x) {
+        for (var i = 0; i < x; i++) {
+            var e = "box" + i
+            document.getElementById(e).addEventListener("mouseover", changeColor);
+        }
+    }
+
+    //commmon random color grabber
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function randomSwitch() {
+        isRandom = !isRandom;
+        return isRandom;
+    }
+
+    var isRandom = false;
+    
+    makeGrid(16);
+    addListenersToBoxes(256);
+
+    document.getElementById("reset").addEventListener("click", reset);
+    document.getElementById("random").addEventListener("click", randomSwitch);
+
+</script>
